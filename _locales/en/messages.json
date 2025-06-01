@@ -1,0 +1,205 @@
+{
+  "appName": {
+    "message": "ClipSmart",
+    "description": "The name of the extension"
+  },
+  "appDescription": {
+    "message": "Smart clipboard manager for your browser",
+    "description": "The description of the extension"
+  },
+  "recent": {
+    "message": "Recent",
+    "description": "Recent tab"
+  },
+  "pinned": {
+    "message": "Pinned",
+    "description": "Pinned tab"
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings tab"
+  },
+  "searchPlaceholder": {
+    "message": "Search clipboard...",
+    "description": "Search input placeholder"
+  },
+  "noClipboardItems": {
+    "message": "No clipboard items yet",
+    "description": "Empty state title"
+  },
+  "copyToGetStarted": {
+    "message": "Copy something to get started!",
+    "description": "Empty state subtitle"
+  },
+  "noPinnedItems": {
+    "message": "No pinned items",
+    "description": "No pinned items message"
+  },
+  "pinFavorites": {
+    "message": "Pin your favorite clips for quick access",
+    "description": "Pin favorites message"
+  },
+  "appearance": {
+    "message": "Appearance",
+    "description": "Appearance settings"
+  },
+  "theme": {
+    "message": "Theme",
+    "description": "Theme setting"
+  },
+  "language": {
+    "message": "Language",
+    "description": "Language setting"
+  },
+  "interfaceLanguage": {
+    "message": "Interface Language",
+    "description": "Interface language setting"
+  },
+  "storage": {
+    "message": "Storage",
+    "description": "Storage settings"
+  },
+  "autoDeleteAfter": {
+    "message": "Auto-delete items after",
+    "description": "Auto-delete setting"
+  },
+  "never": {
+    "message": "Never",
+    "description": "Never option"
+  },
+  "clearAllItems": {
+    "message": "Clear All Items",
+    "description": "Clear all button"
+  },
+  "translation": {
+    "message": "Translation",
+    "description": "Translation settings"
+  },
+  "defaultLanguages": {
+    "message": "Default languages",
+    "description": "Default translation languages"
+  },
+  "translationsUsed": {
+    "message": "Translations used",
+    "description": "Translations used label"
+  },
+  "thisMonth": {
+    "message": "this month",
+    "description": "This month text"
+  },
+  "about": {
+    "message": "About",
+    "description": "About section"
+  },
+  "privacyPolicy": {
+    "message": "Privacy Policy",
+    "description": "Privacy policy link"
+  },
+  "support": {
+    "message": "Support",
+    "description": "Support link"
+  },
+  "upgradePro": {
+    "message": "Upgrade Pro",
+    "description": "Upgrade button"
+  },
+  "copied": {
+    "message": "Copied to clipboard!",
+    "description": "Copy success message"
+  },
+  "translationCopied": {
+    "message": "Translation copied!",
+    "description": "Translation copy success"
+  },
+  "moreItemsAvailable": {
+    "message": "more items available",
+    "description": "More items message"
+  },
+  "unlimitedTranslations": {
+    "message": "Unlimited translations with Pro!",
+    "description": "Pro translations message"
+  },
+  "reachedTranslationLimit": {
+    "message": "You've reached the free translation limit. Upgrade to Pro for unlimited translations!",
+    "description": "Translation limit message"
+  },
+  "confirmClearAll": {
+    "message": "Are you sure you want to clear all clipboard items?",
+    "description": "Clear all confirmation"
+  },
+  "characters": {
+    "message": "characters",
+    "description": "Characters count"
+  },
+  "justNow": {
+    "message": "Just now",
+    "description": "Just now time"
+  },
+  "minutesAgo": {
+    "message": "$MINUTES$m ago",
+    "description": "Minutes ago",
+    "placeholders": {
+      "minutes": {
+        "content": "$1"
+      }
+    }
+  },
+  "hoursAgo": {
+    "message": "$HOURS$h ago",
+    "description": "Hours ago",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
+      }
+    }
+  },
+  "daysAgo": {
+    "message": "$DAYS$d ago",
+    "description": "Days ago",
+    "placeholders": {
+      "days": {
+        "content": "$1"
+      }
+    }
+  },
+  "translate": {
+    "message": "Translate",
+    "description": "Translate button"
+  },
+  "pin": {
+    "message": "Pin",
+    "description": "Pin button"
+  },
+  "unpin": {
+    "message": "Unpin",
+    "description": "Unpin button"
+  },
+  "copy": {
+    "message": "Copy",
+    "description": "Copy button"
+  },
+  "delete": {
+    "message": "Delete",
+    "description": "Delete button"
+  },
+  "translating": {
+    "message": "Translating...",
+    "description": "Translating loading"
+  },
+  "translationFailed": {
+    "message": "Translation failed. Please try again.",
+    "description": "Translation error"
+  },
+  "saveToClipSmart": {
+    "message": "Save to ClipSmart",
+    "description": "Context menu item"
+  },
+  "openClipSmart": {
+    "message": "Open ClipSmart",
+    "description": "Command description"
+  },
+  "copyLastItem": {
+    "message": "Copy last clipboard item",
+    "description": "Command description"
+  }
+}

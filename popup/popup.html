@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ClipSmart - Smart clipboard manager for your browser">
+    <meta name="theme-color" content="#ffffff">
+    <title>ClipSmart</title>
+    <link rel="icon" type="image/png" href="../assets/icon-32.png">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon" aria-hidden="true">📋</span>
+                <span class="logo-text">ClipSmart</span>
+            </div>
+            <div class="item-count">
+                <span id="itemCount">0</span> items
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-container" id="searchContainer" role="search">
+        <div class="search-box">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search clipboard..." autocomplete="off" aria-label="Search clipboard items">
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <nav class="tabs" role="tablist">
+        <button class="tab-button active" data-tab="recent" role="tab" aria-selected="true" aria-controls="recentTab">Recent</button>
+        <button class="tab-button" data-tab="pinned" role="tab" aria-selected="false" aria-controls="pinnedTab">Pinned</button>
+        <button class="tab-button" data-tab="settings" role="tab" aria-selected="false" aria-controls="settingsTab">Settings</button>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="content" role="main">
+        <!-- Recent Tab -->
+        <div class="tab-content active" id="recentTab">
+            <div class="clipboard-list" id="recentList">
+                <!-- Items will be dynamically inserted here -->
+            </div>
+            <div class="empty-state" id="recentEmpty" style="display: none;">
+                <div class="empty-icon">📋</div>
+                <p class="empty-text">No clipboard items yet</p>
+                <p class="empty-subtext">Copy something to get started!</p>
+            </div>
+        </div>
+
+        <!-- Pinned Tab -->
+        <div class="tab-content" id="pinnedTab">
+            <div class="clipboard-list" id="pinnedList">
+                <!-- Pinned items will be dynamically inserted here -->
+            </div>
+            <div class="empty-state" id="pinnedEmpty">
+                <div class="empty-icon">📌</div>
+                <p class="empty-text">No pinned items</p>
+                <p class="empty-subtext">Pin your favorite clips for quick access</p>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settingsTab">
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h3 class="settings-title">Appearance</h3>
+                    <div class="setting-item">
+                        <span class="setting-label">Theme</span>
+                        <select id="themeSelect" class="setting-select">
+                            <option value="auto">Auto</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">Language</h3>
+                    <div class="setting-item">
+                        <span class="setting-label">Interface Language</span>
+                        <select id="languageSelect" class="setting-select">
+                            <option value="en">English</option>
+                            <option value="sk">Slovenčina</option>
+                            <option value="cs">Čeština</option>
+                            <option value="de">Deutsch</option>
+                            <option value="es">Español</option>
+                            <option value="zh">中文</option>
+                            <option value="ja">日本語</option>
+                            <option value="fr">Français</option>
+                            <option value="ru">Русский</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">Storage</h3>
+                    <div class="setting-item">
+                        <span class="setting-label">Auto-delete items after</span>
+                        <select id="autoDeleteSelect" class="setting-select">
+                            <option value="never">Never</option>
+                            <option value="1">1 day</option>
+                            <option value="7">7 days</option>
+                            <option value="30">30 days</option>
+                        </select>
+                    </div>
+                    <button class="clear-button" id="clearAllButton">Clear All Items</button>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">Translation</h3>
+                    <div class="setting-item">
+                        <span class="setting-label">Default languages</span>
+                        <div class="translation-langs">
+                            <select class="lang-select" id="transLang1">
+                                <option value="sk">Slovenčina</option>
+                                <option value="cs">Čeština</option>
+                                <option value="de">Deutsch</option>
+                                <option value="es">Español</option>
+                                <option value="fr">Français</option>
+                                <option value="zh">中文</option>
+                                <option value="ja">日本語</option>
+                            </select>
+                            <select class="lang-select" id="transLang2">
+                                <option value="cs">Čeština</option>
+                                <option value="sk">Slovenčina</option>
+                                <option value="de">Deutsch</option>
+                                <option value="es">Español</option>
+                                <option value="fr">Français</option>
+                                <option value="zh">中文</option>
+                                <option value="ja">日本語</option>
+                            </select>
+                            <select class="lang-select" id="transLang3">
+                                <option value="fr">Français</option>
+                                <option value="sk">Slovenčina</option>
+                                <option value="cs">Čeština</option>
+                                <option value="de">Deutsch</option>
+                                <option value="es">Español</option>
+                                <option value="zh">中文</option>
+                                <option value="ja">日本語</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="translation-quota" id="translationQuota">
+                        <span class="quota-text">Translations used: <strong>0/50</strong> this month</span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">About</h3>
+                    <div class="about-info">
+                        <p>ClipSmart v1.0.0</p>
+                        <p class="about-links">
+                            <a href="#" id="privacyLink" rel="noopener">Privacy Policy</a> • 
+                            <a href="#" id="supportLink" rel="noopener">Support</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+            <span class="theme-icon">🌙</span>
+        </button>
+        <button class="upgrade-button" id="upgradeButton">
+            Upgrade Pro
+        </button>
+    </footer>
+
+    <!-- Clipboard Item Template -->
+    <template id="clipboardItemTemplate">
+        <div class="clipboard-item">
+            <div class="item-header">
+                <span class="item-type-icon"></span>
+                <span class="item-time"></span>
+                <div class="item-actions">
+                    <button class="action-btn translate-btn" title="Translate">
+                        <span>🌐</span>
+                    </button>
+                    <button class="action-btn pin-btn" title="Pin">
+                        <span>📌</span>
+                    </button>
+                    <button class="action-btn copy-btn" title="Copy">
+                        <span>📋</span>
+                    </button>
+                    <button class="action-btn delete-btn" title="Delete">
+                        <span>🗑️</span>
+                    </button>
+                </div>
+            </div>
+            <div class="item-content"></div>
+            <div class="item-char-count"></div>
+            <div class="translation-panel" style="display: none;">
+                <div class="translation-list"></div>
+            </div>
+        </div>
+    </template>
+
+    <script src="popup.js"></script>
+</body>
+</html>
