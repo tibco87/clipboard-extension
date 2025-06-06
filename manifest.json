@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDescription__",
+  "version": "1.0.0",
+  "default_locale": "en",
+  
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "32": "assets/icon-32.png",
+      "48": "assets/icon-48.png",
+      "128": "assets/icon-128.png"
+    }
+  },
+  
+  "background": {
+    "service_worker": "background/background.js",
+    "type": "module"
+  },
+  
+  "permissions": [
+    "clipboardRead",
+    "clipboardWrite",
+    "storage",
+    "activeTab",
+    "contextMenus",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://translate.googleapis.com/"
+  ],
+  
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+V",
+        "mac": "Command+Shift+V"
+      },
+      "description": "Open ClipSmart"
+    },
+    "copy-last": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
+      },
+      "description": "Copy last clipboard item"
+    }
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
