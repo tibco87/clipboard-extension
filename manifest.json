@@ -36,7 +36,9 @@
     "alarms"
   ],
   "host_permissions": [
-    "https://translate.googleapis.com/"
+    "https://translate.googleapis.com/",
+    "https://ipapi.co/",
+    "https://extensionpay.com/"
   ],
   
   "commands": {

@@ -1,4 +1,6 @@
 // ClipSmart Popup Script
+import ExtPay from '../js/extpay.js';
+
 class ClipSmart {
     constructor() {
         this.clipboardItems = [];
@@ -16,6 +18,7 @@ class ClipSmart {
         this.sortOrder = 'newest';
         this.locale = 'en';
         this.messages = {};
+        this.extpay = null;
         
         this.init();
     }
@@ -23,6 +26,7 @@ class ClipSmart {
     async init() {
         await this.detectAndSetLocale();
         await this.loadMessages();
+        await this.initializeExtPay();
         await this.loadData();
         await this.loadTags();
         this.setupEventListeners();
@@ -30,6 +34,18 @@ class ClipSmart {
         this.renderContent();
         this.updateItemCount();
         this.updateUIText();
+    }
+
+    async initializeExtPay() {
+        this.extpay = await ExtPay.initialize();
+        this.isPro = this.extpay.isPremium;
+        this.updateLimits();
+    }
+
+    updateLimits() {
+        const limits = ExtPay.getLimits(this.isPro);
+        this.freeItemLimit = limits.items;
+        this.freeTranslationLimit = limits.translationsPerDay;
     }
 
     async detectAndSetLocale() {
@@ -223,7 +239,7 @@ class ClipSmart {
 
         document.getElementById('languageSelect').addEventListener('change', (e) => {
             this.updateSetting('language', e.target.value);
-            this.updateUI();
+            this.updateUIText();
         });
 
         document.getElementById('autoDeleteSelect').addEventListener('change', (e) => {
@@ -258,7 +274,7 @@ class ClipSmart {
 
         // Upgrade button
         document.getElementById('upgradeButton').addEventListener('click', () => {
-            this.openUpgradePage();
+            this.togglePremiumMode(true);
         });
 
         // Links
@@ -790,7 +806,7 @@ class ClipSmart {
         `;
         
         div.querySelector('.upgrade-btn').addEventListener('click', () => {
-            this.openUpgradePage();
+            this.togglePremiumMode(true);
         });
         
         return div;
@@ -825,25 +841,127 @@ class ClipSmart {
     showUpgradeModal(message) {
         // Show upgrade modal (implement as needed)
         if (confirm(message)) {
-            this.openUpgradePage();
+            this.togglePremiumMode(true);
         }
     }
 
-    openUpgradePage() {
-        chrome.tabs.create({ url: 'https://clipsmart.app/upgrade' });
-    }
-
-    updateUI() {
-        // Update UI based on language setting
-        // This would load translations from _locales
-        // For now, keeping English as default
-    }
-
     async togglePremiumMode(enabled) {
-        this.isPro = enabled;
-        await chrome.storage.local.set({ isPro: enabled });
-        this.renderContent();
-        this.updateItemCount();
+        if (enabled) {
+            if (ExtPay.config.isTestMode) {
+                // Testovací režim
+                const payment = await ExtPay.simulatePayment();
+                if (payment.success) {
+                    this.isPro = true;
+                    this.extpay.isPremium = true;
+                    localStorage.setItem('extpay_state', JSON.stringify(this.extpay));
+                    this.updateLimits();
+                    this.updateUIText();
+                    this.showNotification('Premium mode activated (Test Mode)');
+                }
+            } else {
+                // Reálny režim
+                const price = ExtPay.getPrice(this.extpay.region);
+                const response = await fetch('https://extensionpay.com/api/v1/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${ExtPay.config.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        extensionId: ExtPay.config.extensionId,
+                        amount: price.amount,
+                        currency: price.currency
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    // Otvorí sa platobné okno priamo v rozšírení
+                    const paymentWindow = window.open(data.paymentUrl, 'payment', 'width=500,height=600');
+                    
+                    // Sledovanie stavu platby
+                    const checkPaymentStatus = async () => {
+                        const statusResponse = await fetch(`https://extensionpay.com/api/v1/payment-status/${data.paymentId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${ExtPay.config.apiKey}`
+                            }
+                        });
+                        
+                        if (statusResponse.ok) {
+                            const status = await statusResponse.json();
+                            if (status.status === 'completed') {
+                                this.isPro = true;
+                                this.extpay.isPremium = true;
+                                localStorage.setItem('extpay_state', JSON.stringify(this.extpay));
+                                this.updateLimits();
+                                this.updateUIText();
+                                this.showNotification('Premium mode activated!');
+                                paymentWindow.close();
+                            } else if (status.status === 'failed') {
+                                this.showNotification('Payment failed. Please try again.');
+                                paymentWindow.close();
+                            }
+                        }
+                    };
+                    
+                    // Kontrola stavu platby každých 2 sekundy
+                    const statusInterval = setInterval(checkPaymentStatus, 2000);
+                    
+                    // Zastavenie kontroly po 5 minútach
+                    setTimeout(() => {
+                        clearInterval(statusInterval);
+                    }, 300000);
+                }
+            }
+        } else {
+            this.isPro = false;
+            this.extpay.isPremium = false;
+            localStorage.setItem('extpay_state', JSON.stringify(this.extpay));
+            this.updateLimits();
+            this.updateUIText();
+        }
+    }
+
+    async checkTranslationLimit() {
+        if (this.isPro) return true;
+        
+        const today = new Date().toDateString();
+        const translationsToday = await chrome.storage.local.get(['translationsToday']);
+        
+        if (!translationsToday.translationsToday || translationsToday.translationsToday.date !== today) {
+            await chrome.storage.local.set({
+                translationsToday: {
+                    date: today,
+                    count: 0
+                }
+            });
+            return true;
+        }
+        
+        return translationsToday.translationsToday.count < this.freeTranslationLimit;
+    }
+
+    async incrementTranslationCount() {
+        if (this.isPro) return;
+        
+        const today = new Date().toDateString();
+        const translationsToday = await chrome.storage.local.get(['translationsToday']);
+        
+        if (!translationsToday.translationsToday || translationsToday.translationsToday.date !== today) {
+            await chrome.storage.local.set({
+                translationsToday: {
+                    date: today,
+                    count: 1
+                }
+            });
+        } else {
+            await chrome.storage.local.set({
+                translationsToday: {
+                    date: today,
+                    count: translationsToday.translationsToday.count + 1
+                }
+            });
+        }
     }
 
     async addTag(itemId, tag) {
