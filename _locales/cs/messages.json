@@ -72,5 +72,9 @@
   "themeDark": { "message": "Tmavý", "description": "Možnost motiv tmavý" },
   "oneDay": { "message": "1 den", "description": "Automatické mazání 1 den" },
   "sevenDays": { "message": "7 dní", "description": "Automatické mazání 7 dní" },
-  "thirtyDays": { "message": "30 dní", "description": "Automatické mazání 30 dní" }
+  "thirtyDays": { "message": "30 dní", "description": "Automatické mazání 30 dní" },
+  "unlimitedTranslationsPro": {
+    "message": "Neomezené překlady s Pro!",
+    "description": "Banner nebo tlačítko pro neomezené překlady s Pro verzí"
+  }
 } 

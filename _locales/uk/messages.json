@@ -72,5 +72,9 @@
   "themeDark": { "message": "Темна", "description": "Опція теми темна" },
   "oneDay": { "message": "1 день", "description": "Автоматичне видалення 1 день" },
   "sevenDays": { "message": "7 днів", "description": "Автоматичне видалення 7 днів" },
-  "thirtyDays": { "message": "30 днів", "description": "Автоматичне видалення 30 днів" }
+  "thirtyDays": { "message": "30 днів", "description": "Автоматичне видалення 30 днів" },
+  "unlimitedTranslationsPro": {
+    "message": "Необмежені переклади з Pro!",
+    "description": "Банер або кнопка для необмежених перекладів у версії Pro"
+  }
 } 

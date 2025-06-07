@@ -72,5 +72,9 @@
   "themeDark": { "message": "गहरा", "description": "थीम विकल्प गहरा" },
   "oneDay": { "message": "1 दिन", "description": "स्वचालित हटाने 1 दिन" },
   "sevenDays": { "message": "7 दिन", "description": "स्वचालित हटाने 7 दिन" },
-  "thirtyDays": { "message": "30 दिन", "description": "स्वचालित हटाने 30 दिन" }
+  "thirtyDays": { "message": "30 दिन", "description": "स्वचालित हटाने 30 दिन" },
+  "unlimitedTranslationsPro": {
+    "message": "प्रो के साथ असीमित अनुवाद!",
+    "description": "प्रो संस्करण के साथ असीमित अनुवाद के लिए बैनर या बटन"
+  }
 } 

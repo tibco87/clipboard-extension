@@ -72,5 +72,9 @@
   "themeDark": { "message": "Ciemny", "description": "Opcja motyw ciemny" },
   "oneDay": { "message": "1 dzień", "description": "Auto-usuwanie 1 dzień" },
   "sevenDays": { "message": "7 dni", "description": "Auto-usuwanie 7 dni" },
-  "thirtyDays": { "message": "30 dni", "description": "Auto-usuwanie 30 dni" }
+  "thirtyDays": { "message": "30 dni", "description": "Auto-usuwanie 30 dni" },
+  "unlimitedTranslationsPro": {
+    "message": "Nieograniczone tłumaczenia z Pro!",
+    "description": "Baner lub przycisk dla nieograniczonych tłumaczeń w wersji Pro"
+  }
 } 

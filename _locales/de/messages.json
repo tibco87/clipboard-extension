@@ -305,5 +305,9 @@
   "thirtyDays": {
     "message": "30 Tage",
     "description": "Auto-Löschen 30 Tage"
+  },
+  "unlimitedTranslationsPro": {
+    "message": "Unbegrenzte Übersetzungen mit Pro!",
+    "description": "Banner oder Button für unbegrenzte Übersetzungen mit Pro-Version"
   }
 } 

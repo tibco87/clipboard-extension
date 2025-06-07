@@ -60,7 +60,10 @@
   "unlimitedHistory": { "message": "無制限の履歴", "description": "無制限履歴機能" },
   "exportTxtCsv": { "message": "TXT/CSVにエクスポート", "description": "エクスポート機能" },
   "advancedTagging": { "message": "高度なタグ付け", "description": "高度なタグ付け機能" },
-  "unlimitedTranslations": { "message": "無制限の翻訳", "description": "無制限翻訳機能" },
+  "unlimitedTranslationsPro": {
+    "message": "プロ版で無制限の翻訳！",
+    "description": "プロ版無制限翻訳のバナーまたはボタン"
+  },
   "tooltipTranslate": { "message": "翻訳", "description": "翻訳ボタンのツールチップ" },
   "tooltipPin": { "message": "ピン留め", "description": "ピン留めボタンのツールチップ" },
   "tooltipCopy": { "message": "コピー", "description": "コピーボタンのツールチップ" },

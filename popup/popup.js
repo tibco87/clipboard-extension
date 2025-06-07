@@ -700,11 +700,11 @@ class ClipSmart {
     updateTranslationQuota() {
         const quotaElement = document.getElementById('translationQuota');
         if (this.isPro) {
-            quotaElement.innerHTML = '<span class="quota-text">Unlimited translations with Pro!</span>';
+            quotaElement.innerHTML = `<span class="quota-text">${this.getMessage('unlimitedTranslationsPro')}</span>`;
         } else {
             quotaElement.innerHTML = `
-                <span class="quota-text">Translations used: 
-                    <strong>${this.translationsUsed}/${this.freeTranslationLimit}</strong> this month
+                <span class="quota-text">${this.getMessage('translationsUsed') || 'Translations used'}: 
+                    <strong>${this.translationsUsed}/${this.freeTranslationLimit}</strong> ${this.getMessage('thisMonth') || 'this month'}
                 </span>
             `;
         }

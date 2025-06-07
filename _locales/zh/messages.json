@@ -72,5 +72,9 @@
   "themeDark": { "message": "深色", "description": "主题选项深色" },
   "oneDay": { "message": "1天", "description": "自动删除1天" },
   "sevenDays": { "message": "7天", "description": "自动删除7天" },
-  "thirtyDays": { "message": "30天", "description": "自动删除30天" }
+  "thirtyDays": { "message": "30天", "description": "自动删除30天" },
+  "unlimitedTranslationsPro": {
+    "message": "专业版无限翻译！",
+    "description": "专业版无限翻译的横幅或按钮"
+  }
 } 

@@ -258,9 +258,9 @@
     "message": "Advanced tagging",
     "description": "Advanced tagging feature"
   },
-  "unlimitedTranslations": {
-    "message": "Unlimited translations",
-    "description": "Unlimited translations feature"
+  "unlimitedTranslationsPro": {
+    "message": "Unlimited translations with Pro!",
+    "description": "Banner or button for unlimited translations with Pro version"
   },
   "tooltipTranslate": {
     "message": "Translate",
