@@ -30,15 +30,15 @@
             <input type="text" id="searchInput" placeholder="Search clipboard..." autocomplete="off" aria-label="Search clipboard items">
         </div>
         <div class="sort-filter">
-            <span class="sort-label">Zoradiť:</span>
+            <span class="sort-label">Sort by:</span>
             <span class="sort-icon">⇅</span>
             <select id="sortSelect" class="sort-select">
-                <option value="newest">Najnovšie</option>
-                <option value="oldest">Najstaršie</option>
-                <option value="az">Abecedne A-Z</option>
-                <option value="za">Abecedne Z-A</option>
-                <option value="longest">Najviac znakov</option>
-                <option value="shortest">Najmenej znakov</option>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="az">Alphabetically A-Z</option>
+                <option value="za">Alphabetically Z-A</option>
+                <option value="longest">Most characters</option>
+                <option value="shortest">Fewest characters</option>
             </select>
         </div>
     </div>
@@ -97,14 +97,16 @@
                         <span class="setting-label">Interface Language</span>
                         <select id="languageSelect" class="setting-select">
                             <option value="en">English</option>
-                            <option value="sk">Slovenčina</option>
-                            <option value="cs">Čeština</option>
                             <option value="de">Deutsch</option>
-                            <option value="es">Español</option>
-                            <option value="zh">中文</option>
-                            <option value="ja">日本語</option>
                             <option value="fr">Français</option>
-                            <option value="ru">Русский</option>
+                            <option value="es">Español</option>
+                            <option value="pl">Polski</option>
+                            <option value="cs">Čeština</option>
+                            <option value="uk">Українська</option>
+                            <option value="zh">中文</option>
+                            <option value="ko">한국어</option>
+                            <option value="ja">日本語</option>
+                            <option value="hi">हिन्दी</option>
                         </select>
                     </div>
                 </div>
@@ -220,11 +222,11 @@
             <div class="item-char-count"></div>
             <div class="item-actions">
                 <button class="action-btn tag-btn" title="Tag"><span>🏷️</span></button>
-                <button class="action-btn translate-btn" title="Preložiť"><span>🌐</span></button>
-                <button class="action-btn pin-btn" title="Pripnúť"><span>📌</span></button>
-                <button class="action-btn copy-btn" title="Kopírovať"><span>📋</span></button>
-                <button class="action-btn delete-btn" title="Vymazať"><span>🗑️</span></button>
-                <button class="action-btn export-btn" title="Exportovať"><span>⬇️</span></button>
+                <button class="action-btn translate-btn" title="Translate"><span>🌐</span></button>
+                <button class="action-btn pin-btn" title="Pin"><span>📌</span></button>
+                <button class="action-btn copy-btn" title="Copy"><span>📋</span></button>
+                <button class="action-btn delete-btn" title="Delete"><span>🗑️</span></button>
+                <button class="action-btn export-btn" title="Export"><span>⬇️</span></button>
             </div>
         </div>
     </template>

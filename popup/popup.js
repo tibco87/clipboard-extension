@@ -9,22 +9,153 @@ class ClipSmart {
         this.freeTranslationLimit = 50;
         this.translationsUsed = 0;
         this.isPro = false;
-        this.defaultTransLangs = ['de', 'es', 'fr'];
+        this.defaultTransLangs = ['en', 'de', 'fr'];
         this.tags = new Set();
-        this.translationLimit = 10; // Limit prekladov pre free verziu
-        this.availableLanguages = ['en', 'sk', 'de'];
+        this.translationLimit = 10; // Translation limit for free version
+        this.availableLanguages = ['en', 'de', 'fr', 'es', 'pl', 'cs', 'uk', 'zh', 'ko', 'ja', 'hi'];
         this.sortOrder = 'newest';
+        this.locale = 'en';
+        this.messages = {};
         
         this.init();
     }
 
     async init() {
+        await this.detectAndSetLocale();
+        await this.loadMessages();
         await this.loadData();
         await this.loadTags();
         this.setupEventListeners();
         this.applyTheme();
         this.renderContent();
         this.updateItemCount();
+        this.updateUIText();
+    }
+
+    async detectAndSetLocale() {
+        // Check if user has selected a language
+        const data = await chrome.storage.local.get(['settings']);
+        let userLang = data.settings && data.settings.language;
+        if (userLang && this.availableLanguages.includes(userLang)) {
+            this.locale = userLang;
+            return;
+        }
+        // Otherwise, use browser language if supported
+        const browserLang = navigator.language.split('-')[0];
+        if (this.availableLanguages.includes(browserLang)) {
+            this.locale = browserLang;
+        } else {
+            this.locale = 'en';
+        }
+    }
+
+    async loadMessages() {
+        // Load messages.json for the current locale
+        let url = `/_locales/${this.locale}/messages.json`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Locale not found');
+            this.messages = await response.json();
+        } catch (e) {
+            // Fallback to English
+            const response = await fetch('/_locales/en/messages.json');
+            this.messages = await response.json();
+        }
+    }
+
+    getMessage(key) {
+        return this.messages[key]?.message || '';
+    }
+
+    updateUIText() {
+        // Header
+        document.querySelector('.logo-text').textContent = this.getMessage('appName');
+        document.title = this.getMessage('appName');
+        // Počet položiek
+        document.getElementById('itemCount').textContent = this.clipboardItems.length;
+        if (document.getElementById('itemCount').nextSibling) {
+            document.getElementById('itemCount').nextSibling.textContent = ' ' + (this.getMessage('items') || 'items');
+        }
+        // Tabs
+        document.querySelector('[data-tab="recent"]').textContent = this.getMessage('recent');
+        document.querySelector('[data-tab="pinned"]').textContent = this.getMessage('pinned');
+        document.querySelector('[data-tab="settings"]').textContent = this.getMessage('settings');
+        // Search
+        document.getElementById('searchInput').placeholder = this.getMessage('searchPlaceholder');
+        // Sort
+        document.querySelector('.sort-label').textContent = this.getMessage('sortBy') || 'Sort by:';
+        const sortSelect = document.getElementById('sortSelect');
+        if (sortSelect) {
+            sortSelect.options[0].text = this.getMessage('newest') || 'Newest';
+            sortSelect.options[1].text = this.getMessage('oldest') || 'Oldest';
+            sortSelect.options[2].text = this.getMessage('az') || 'Alphabetically A-Z';
+            sortSelect.options[3].text = this.getMessage('za') || 'Alphabetically Z-A';
+            sortSelect.options[4].text = this.getMessage('longest') || 'Most characters';
+            sortSelect.options[5].text = this.getMessage('shortest') || 'Fewest characters';
+        }
+        // Empty state
+        const emptyText = document.querySelector('#recentEmpty .empty-text');
+        if (emptyText) emptyText.textContent = this.getMessage('noClipboardItems');
+        const emptySub = document.querySelector('#recentEmpty .empty-subtext');
+        if (emptySub) emptySub.textContent = this.getMessage('copyToGetStarted');
+        // Pinned empty state
+        const pinnedEmptyText = document.querySelector('#pinnedEmpty .empty-text');
+        if (pinnedEmptyText) pinnedEmptyText.textContent = this.getMessage('noPinnedItems');
+        const pinnedEmptySub = document.querySelector('#pinnedEmpty .empty-subtext');
+        if (pinnedEmptySub) pinnedEmptySub.textContent = this.getMessage('pinFavorites');
+        // Upgrade button
+        const upgradeBtn = document.getElementById('upgradeButton');
+        if (upgradeBtn) upgradeBtn.textContent = this.getMessage('upgradePro') || 'Upgrade Pro';
+        // Theme toggle tooltip
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) themeToggle.title = this.getMessage('toggleTheme') || 'Toggle theme';
+        // Settings sekcie
+        const settingsTitles = document.querySelectorAll('.settings-title');
+        if (settingsTitles[0]) settingsTitles[0].textContent = this.getMessage('appearance');
+        if (settingsTitles[1]) settingsTitles[1].textContent = this.getMessage('language');
+        if (settingsTitles[2]) settingsTitles[2].textContent = this.getMessage('storage');
+        if (settingsTitles[3]) settingsTitles[3].textContent = this.getMessage('translation');
+        if (settingsTitles[4]) settingsTitles[4].textContent = this.getMessage('about');
+        if (settingsTitles[5]) settingsTitles[5].textContent = this.getMessage('premiumFeatures') || 'Premium Features';
+        // Settings labels
+        const settingLabels = document.querySelectorAll('.setting-label');
+        if (settingLabels[0]) settingLabels[0].textContent = this.getMessage('theme');
+        if (settingLabels[1]) settingLabels[1].textContent = this.getMessage('interfaceLanguage');
+        if (settingLabels[2]) settingLabels[2].textContent = this.getMessage('autoDeleteAfter');
+        if (settingLabels[3]) settingLabels[3].textContent = this.getMessage('defaultLanguages');
+        // Clear all button
+        const clearBtn = document.getElementById('clearAllButton');
+        if (clearBtn) clearBtn.textContent = this.getMessage('clearAllItems');
+        // Privacy & Support
+        const privacyLink = document.getElementById('privacyLink');
+        if (privacyLink) privacyLink.textContent = this.getMessage('privacyPolicy');
+        const supportLink = document.getElementById('supportLink');
+        if (supportLink) supportLink.textContent = this.getMessage('support');
+        // Premium sekcia
+        const premiumLabel = document.querySelector('label[for="premiumMode"]');
+        if (premiumLabel) premiumLabel.textContent = this.getMessage('enablePremium');
+        const premiumInfo = document.querySelector('.premium-info p');
+        if (premiumInfo) premiumInfo.textContent = this.getMessage('premiumIncludes');
+        const premiumList = document.querySelectorAll('.premium-info ul li');
+        if (premiumList[0]) premiumList[0].textContent = this.getMessage('unlimitedHistory');
+        if (premiumList[1]) premiumList[1].textContent = this.getMessage('exportTxtCsv');
+        if (premiumList[2]) premiumList[2].textContent = this.getMessage('advancedTagging');
+        if (premiumList[3]) premiumList[3].textContent = this.getMessage('unlimitedTranslations');
+        // Theme select options
+        const themeSelect = document.getElementById('themeSelect');
+        if (themeSelect) {
+            themeSelect.options[0].text = this.getMessage('themeAuto') || 'Auto';
+            themeSelect.options[1].text = this.getMessage('themeLight') || 'Light';
+            themeSelect.options[2].text = this.getMessage('themeDark') || 'Dark';
+        }
+        // Auto-delete select options
+        const autoDeleteSelect = document.getElementById('autoDeleteSelect');
+        if (autoDeleteSelect) {
+            autoDeleteSelect.options[0].text = this.getMessage('never') || 'Never';
+            autoDeleteSelect.options[1].text = this.getMessage('oneDay') || '1 day';
+            autoDeleteSelect.options[2].text = this.getMessage('sevenDays') || '7 days';
+            autoDeleteSelect.options[3].text = this.getMessage('thirtyDays') || '30 days';
+        }
     }
 
     async loadData() {
@@ -343,6 +474,13 @@ class ClipSmart {
             }
         });
 
+        // Nastav dynamické tooltipy
+        element.querySelector('.translate-btn').title = this.getMessage('tooltipTranslate');
+        element.querySelector('.pin-btn').title = this.getMessage('tooltipPin');
+        element.querySelector('.copy-btn').title = this.getMessage('tooltipCopy');
+        element.querySelector('.delete-btn').title = this.getMessage('tooltipDelete');
+        element.querySelector('.export-btn').title = this.getMessage('tooltipExport');
+
         // Setup action buttons
         this.setupItemActions(element, item);
 
@@ -387,35 +525,35 @@ class ClipSmart {
     }
 
     showLanguageSelect(element, item) {
-        // Odstráň starý panel ak existuje
+        // Remove old panel if exists
         let oldPanel = element.querySelector('.translation-panel');
         if (oldPanel) oldPanel.remove();
 
-        // Unikátne ID pre select a button
+        // Unique IDs for select and button
         const selectId = `langSelect-${item.id}`;
         const btnId = `translateGoBtn-${item.id}`;
 
-        // Vytvor panel na výber jazyka
+        // Create language selection panel
         const panel = document.createElement('div');
         panel.className = 'translation-panel';
         panel.style.display = 'block';
         panel.innerHTML = `
             <div class="translation-list">
-                <label for="${selectId}">Vyber jazyk prekladu:</label>
+                <label for="${selectId}">Select translation language:</label>
                 <select id="${selectId}">
-                    <option value="en">Angličtina</option>
-                    <option value="de">Nemčina</option>
-                    <option value="fr">Francúzština</option>
-                    <option value="es">Španielčina</option>
-                    <option value="ru">Ruština</option>
-                    <option value="uk">Ukrajinčina</option>
-                    <option value="zh">Čínština</option>
-                    <option value="ja">Japončina</option>
-                    <option value="hi">Hindčina</option>
-                    <option value="pl">Poľština</option>
-                    <option value="cs">Čeština</option>
+                    <option value="en">English</option>
+                    <option value="de">German</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="ru">Russian</option>
+                    <option value="uk">Ukrainian</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ja">Japanese</option>
+                    <option value="hi">Hindi</option>
+                    <option value="pl">Polish</option>
+                    <option value="cs">Czech</option>
                 </select>
-                <button id="${btnId}">Preložiť</button>
+                <button id="${btnId}">Translate</button>
                 <div class="translation-result"></div>
             </div>
         `;
@@ -426,7 +564,7 @@ class ClipSmart {
         const resultDiv = panel.querySelector('.translation-result');
 
         goBtn.addEventListener('click', async () => {
-            resultDiv.innerHTML = '<div class="loading">Prekladám...</div>';
+            resultDiv.innerHTML = '<div class="loading">Translating...</div>';
             const lang = select.value;
             try {
                 const translations = await this.translateText(item.text, lang);
@@ -436,10 +574,10 @@ class ClipSmart {
                     const transItem = this.createTranslationElement(lang, translation);
                     resultDiv.appendChild(transItem);
                 } else {
-                    resultDiv.innerHTML = '<div class="error">Preklad sa nepodaril.</div>';
+                    resultDiv.innerHTML = '<div class="error">Translation failed.</div>';
                 }
             } catch (error) {
-                resultDiv.innerHTML = '<div class="error">Preklad sa nepodaril.</div>';
+                resultDiv.innerHTML = '<div class="error">Translation failed.</div>';
             }
         });
     }
@@ -509,6 +647,8 @@ class ClipSmart {
         await this.saveData();
         this.renderContent();
         this.updateItemCount();
+        // Aktualizuj badge v backgrounde
+        chrome.runtime.sendMessage({ action: 'updateBadge', count: 0 });
     }
 
     async saveData() {
@@ -573,6 +713,12 @@ class ClipSmart {
     async updateSetting(key, value) {
         this.settings[key] = value;
         await chrome.storage.local.set({ settings: this.settings });
+        if (key === 'language') {
+            this.locale = value;
+            await this.loadMessages();
+            this.updateUIText();
+            this.renderContent();
+        }
     }
 
     applyTheme() {

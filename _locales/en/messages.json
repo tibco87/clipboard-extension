@@ -101,7 +101,7 @@
   },
   "upgradePro": {
     "message": "Upgrade Pro",
-    "description": "Upgrade button"
+    "description": "Upgrade Pro button label"
   },
   "copied": {
     "message": "Copied to clipboard!",
@@ -201,5 +201,113 @@
   "copyLastItem": {
     "message": "Copy last clipboard item",
     "description": "Command description"
+  },
+  "items": {
+    "message": "items",
+    "description": "Label for number of items"
+  },
+  "sortBy": {
+    "message": "Sort by:",
+    "description": "Sort label"
+  },
+  "newest": {
+    "message": "Newest",
+    "description": "Sort option"
+  },
+  "oldest": {
+    "message": "Oldest",
+    "description": "Sort option"
+  },
+  "az": {
+    "message": "Alphabetically A-Z",
+    "description": "Sort option"
+  },
+  "za": {
+    "message": "Alphabetically Z-A",
+    "description": "Sort option"
+  },
+  "longest": {
+    "message": "Most characters",
+    "description": "Sort option"
+  },
+  "shortest": {
+    "message": "Fewest characters",
+    "description": "Sort option"
+  },
+  "premiumFeatures": {
+    "message": "Premium Features",
+    "description": "Premium features section title"
+  },
+  "enablePremium": {
+    "message": "Enable Premium Mode",
+    "description": "Enable premium mode label"
+  },
+  "premiumIncludes": {
+    "message": "Premium features include:",
+    "description": "Premium features include label"
+  },
+  "unlimitedHistory": {
+    "message": "Unlimited history",
+    "description": "Unlimited history feature"
+  },
+  "exportTxtCsv": {
+    "message": "Export to TXT/CSV",
+    "description": "Export feature"
+  },
+  "advancedTagging": {
+    "message": "Advanced tagging",
+    "description": "Advanced tagging feature"
+  },
+  "unlimitedTranslations": {
+    "message": "Unlimited translations",
+    "description": "Unlimited translations feature"
+  },
+  "tooltipTranslate": {
+    "message": "Translate",
+    "description": "Tooltip for translate button"
+  },
+  "tooltipPin": {
+    "message": "Pin",
+    "description": "Tooltip for pin button"
+  },
+  "tooltipCopy": {
+    "message": "Copy",
+    "description": "Tooltip for copy button"
+  },
+  "tooltipDelete": {
+    "message": "Delete",
+    "description": "Tooltip for delete button"
+  },
+  "tooltipExport": {
+    "message": "Export",
+    "description": "Tooltip for export button"
+  },
+  "toggleTheme": {
+    "message": "Toggle theme",
+    "description": "Tooltip for theme toggle button"
+  },
+  "themeAuto": {
+    "message": "Auto",
+    "description": "Theme option auto"
+  },
+  "themeLight": {
+    "message": "Light",
+    "description": "Theme option light"
+  },
+  "themeDark": {
+    "message": "Dark",
+    "description": "Theme option dark"
+  },
+  "oneDay": {
+    "message": "1 day",
+    "description": "Auto-delete 1 day"
+  },
+  "sevenDays": {
+    "message": "7 days",
+    "description": "Auto-delete 7 days"
+  },
+  "thirtyDays": {
+    "message": "30 days",
+    "description": "Auto-delete 30 days"
   }
 }

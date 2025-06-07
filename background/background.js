@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
                 theme: 'auto',
                 language: 'en',
                 autoDelete: 'never',
-                translationLangs: ['de', 'es', 'fr']
+                translationLangs: ['en', 'de', 'fr']
             },
             isPro: false,
             translationsUsed: 0,
@@ -22,10 +22,12 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     }
 
     // Create context menu
-    chrome.contextMenus.create({
-        id: 'save-to-clipsmart',
-        title: 'Save to ClipSmart',
-        contexts: ['selection']
+    chrome.contextMenus.remove('save-to-clipsmart', function() {
+        chrome.contextMenus.create({
+            id: 'save-to-clipsmart',
+            title: 'Save to ClipSmart',
+            contexts: ['selection']
+        });
     });
 
     // Create alarms
