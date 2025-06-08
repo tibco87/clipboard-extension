@@ -583,9 +583,8 @@ class ClipSmart {
             resultDiv.innerHTML = '<div class="loading">Translating...</div>';
             const lang = select.value;
             try {
-                const translations = await this.translateText(item.text, lang);
+                const translation = await this.translateText(item.text, lang);
                 resultDiv.innerHTML = '';
-                const translation = translations[lang];
                 if (translation) {
                     const transItem = this.createTranslationElement(lang, translation);
                     resultDiv.appendChild(transItem);
@@ -605,27 +604,21 @@ class ClipSmart {
         }
 
         try {
-            const response = await fetch('https://libretranslate.de/translate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    q: text,
-                    source: 'auto',
-                    target: targetLang
-                })
+            const translation = await new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage(
+                    { action: 'translateText', text, targetLang },
+                    (response) => {
+                        if (response && response.success) resolve(response.translation);
+                        else reject(response?.error || 'Translation failed');
+                    }
+                );
             });
-
-            if (!response.ok) throw new Error('Translation failed');
-
-            const data = await response.json();
             if (!this.isPro) {
                 this.translationsUsed++;
                 await chrome.storage.local.set({ translationsUsed: this.translationsUsed });
                 this.updateTranslationQuota();
             }
-            return data.translatedText;
+            return translation;
         } catch (error) {
             console.error('Translation error:', error);
             return null;
@@ -1077,6 +1070,13 @@ class ClipSmart {
         a.download = filename;
         a.click();
         URL.revokeObjectURL(url);
+    }
+
+    createTranslationElement(lang, translation) {
+        const div = document.createElement('div');
+        div.className = 'translated-text';
+        div.innerHTML = `<strong>${lang.toUpperCase()}:</strong> ${translation}`;
+        return div;
     }
 }
 

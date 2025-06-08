@@ -153,9 +153,36 @@ let clipboardMonitor = {
     }
 };
 
-// Listen for messages from content script
+// Google Translate API KEY (demo - v produkcii bezpečne uložiť)
+const GOOGLE_TRANSLATE_API_KEY = 'AIzaSyBel24LTIb-LYj5I5kcbr2quZkAS35RAD0';
+
+// Listen for messages from popup.js for translation
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'getApiKey') {
+    if (request.action === 'translateText') {
+        const { text, targetLang } = request;
+        fetch(`https://translation.googleapis.com/language/translate/v2?key=${GOOGLE_TRANSLATE_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                q: text,
+                target: targetLang,
+                format: 'text'
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('Google Translate API response:', data);
+            if (data && data.data && data.data.translations && data.data.translations[0]) {
+                sendResponse({ success: true, translation: data.data.translations[0].translatedText });
+            } else {
+                sendResponse({ success: false, error: 'No translation found' });
+            }
+        })
+        .catch(err => {
+            sendResponse({ success: false, error: err.message });
+        });
+        return true; // async response
+    } else if (request.action === 'getApiKey') {
         // Return API key for translations (stored securely)
         chrome.storage.local.get(['openaiApiKey'], (data) => {
             sendResponse({ apiKey: data.openaiApiKey });
