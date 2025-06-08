@@ -340,14 +340,13 @@ class ClipSmart {
     }
 
     filterItems() {
+        let items = this.clipboardItems.filter(item => !item.pinned && item.type !== 'translation');
         if (!this.searchQuery) {
-            this.filteredItems = this.clipboardItems;
+            this.filteredItems = items;
             return;
         }
-
         const query = this.searchQuery.toLowerCase();
-
-        this.filteredItems = this.clipboardItems.filter(item => {
+        this.filteredItems = items.filter(item => {
             return (
                 item.text.toLowerCase().includes(query) ||
                 (item.tags && Array.from(item.tags).some(tagText => tagText.toLowerCase().includes(query)))
@@ -1074,9 +1073,79 @@ class ClipSmart {
 
     createTranslationElement(lang, translation) {
         const div = document.createElement('div');
-        div.className = 'translated-text';
-        div.innerHTML = `<strong>${lang.toUpperCase()}:</strong> ${translation}`;
+        div.className = 'translated-text flex items-center gap-2 p-2 bg-gray-100 rounded mt-2';
+        div.innerHTML = `
+            <strong>${lang.toUpperCase()}:</strong> <span class="translation-content">${translation}</span>
+            <button class="copy-translation-btn" title="${this.getMessage('tooltipCopy') || 'Copy'}">📋</button>
+            <button class="pin-translation-btn" title="${this.getMessage('tooltipPin') || 'Pin'}">⭐</button>
+            <button class="export-translation-btn" title="${this.getMessage('tooltipExport') || 'Export'}">⬇️</button>
+            <button class="close-translation-btn" title="${this.getMessage('close') || 'Close'}">✖️</button>
+        `;
+        // Copy handler
+        div.querySelector('.copy-translation-btn').addEventListener('click', () => {
+            navigator.clipboard.writeText(translation);
+            this.showNotification(this.getMessage('translationCopied') || 'Translation copied!');
+        });
+        // Pin handler
+        div.querySelector('.pin-translation-btn').addEventListener('click', async () => {
+            const newItem = {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+                text: translation,
+                type: 'translation',
+                timestamp: Date.now(),
+                pinned: true,
+                charCount: translation.length,
+                translations: {},
+                tags: new Set()
+            };
+            this.clipboardItems.push(newItem);
+            await this.saveData();
+            this.showNotification(this.getMessage('pinned') || 'Pinned!');
+            this.renderContent();
+        });
+        // Export handler
+        div.querySelector('.export-translation-btn').addEventListener('click', () => {
+            this.exportTranslation(translation, lang);
+        });
+        // Close handler
+        div.querySelector('.close-translation-btn').addEventListener('click', () => {
+            div.remove();
+        });
         return div;
+    }
+
+    exportTranslation(translation, lang) {
+        // Export as TXT
+        const txtBlob = new Blob([translation], { type: 'text/plain' });
+        const txtUrl = URL.createObjectURL(txtBlob);
+        const txtLink = document.createElement('a');
+        txtLink.href = txtUrl;
+        txtLink.download = `translation_${lang}.txt`;
+        txtLink.click();
+        URL.revokeObjectURL(txtUrl);
+        // Export as CSV (jednoduchý formát: "lang,translation")
+        const csvBlob = new Blob([`"${lang}","${translation.replace(/"/g, '""')}"`], { type: 'text/csv' });
+        const csvUrl = URL.createObjectURL(csvBlob);
+        const csvLink = document.createElement('a');
+        csvLink.href = csvUrl;
+        csvLink.download = `translation_${lang}.csv`;
+        csvLink.click();
+        URL.revokeObjectURL(csvUrl);
+    }
+
+    updatePinnedItems() {
+        const pinnedContainer = document.getElementById('pinned-items');
+        if (!pinnedContainer) return;
+        pinnedContainer.innerHTML = '';
+        const pinnedItems = this.clipboardItems.filter(item => item.pinned);
+        if (pinnedItems.length === 0) {
+            pinnedContainer.innerHTML = `<div class="text-gray-500">${this.getMessage('noPinnedItems') || 'No pinned items'}</div>`;
+        } else {
+            pinnedItems.forEach(item => {
+                const itemElement = this.createClipboardItemElement(item);
+                pinnedContainer.appendChild(itemElement);
+            });
+        }
     }
 }
 

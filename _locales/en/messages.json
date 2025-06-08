@@ -309,5 +309,9 @@
   "thirtyDays": {
     "message": "30 days",
     "description": "Auto-delete 30 days"
+  },
+  "close": {
+    "message": "Close",
+    "description": "Close translation button"
   }
 }
